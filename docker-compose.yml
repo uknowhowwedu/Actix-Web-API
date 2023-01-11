@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  backend:
+    container_name: api
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+     - "80:80"
+    environment:
+      PG__USER: admin
+      PG__PASSWORD: "*7fjn_djpa9dHH78^"
+      PG__HOST: db
+      PG__PORT: 5432
+      PG__DBNAME: main
+      PG__POOL__MAX_SIZE: 16
+    depends_on:
+      - db
+    links:
+      - db
+  db:
+    container_name: db
+    image: postgres:15-alpine
+    mem_limit: 4608MB
+    mem_reservation: 4G
+    environment:
+      POSTGRES_DB: "main"
+      POSTGRES_PASSWORD: "*7fjn_djpa9dHH78^"
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./database/data.sql:/docker-entrypoint-initdb.d/02_data.sql
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:

@@ -1,0 +1,4 @@
+domain = "domain or ip here"
+token-secret = "something long and unique here"
+token-leeway = 3
+token-duration = 900
