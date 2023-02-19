@@ -133,13 +133,20 @@ pub async fn register(client: &Client, payload: models::api::Creds, acc_type: &s
             )
             .await
             .map_err(errors::db_error)?;
-        }
 
-        let resp = models::api::Responses::Register {
-            success: true,
-            access_token: token::create_jwt(&payload.username, &String::from(acc_type), &id)
-        };
-        Ok(HttpResponse::Ok().json(resp))
+            let resp = models::api::Responses::RegisterAdmin {
+                success: true
+            };
+
+            Ok(HttpResponse::Ok().json(resp))
+        } else {
+            let resp = models::api::Responses::Register {
+                success: true,
+                access_token: token::create_jwt(&payload.username, &String::from(acc_type), &id)
+            };
+
+            Ok(HttpResponse::Ok().json(resp))
+        }
     }
 }
 
