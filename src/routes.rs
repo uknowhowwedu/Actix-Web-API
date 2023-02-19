@@ -42,8 +42,7 @@ fn get_identifier(payload: &mut String) -> Result<models::api::Identifier, error
 }
 
 // Route: /auth
-#[post("/auth")]
-async fn auth(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>) -> Result<HttpResponse, errors::Error> {
+pub async fn auth(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>) -> Result<HttpResponse, errors::Error> {
     let creds: models::api::Creds = payload.into_inner();
     validate_username(&creds.username)
         .and(validate_password(&creds.password))?;
@@ -56,8 +55,7 @@ async fn auth(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>) 
 }
 
 // Route: /register
-#[post("/register")]
-async fn register(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>) -> Result<HttpResponse, errors::Error> {
+pub async fn register(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>) -> Result<HttpResponse, errors::Error> {
     let creds: models::api::Creds = payload.into_inner();
     validate_username(&creds.username)
         .and(validate_password(&creds.password))?;
@@ -70,8 +68,7 @@ async fn register(payload: web::Json<models::api::Creds>, db_pool: web::Data<Poo
 }
 
 // Route: /utils/refresh
-#[get("/refresh")]
-async fn refresh(auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn refresh(auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.exp - Utc::now().timestamp() <= 30 {
         let jwt = models::api::Responses::Jwt {
@@ -84,8 +81,7 @@ async fn refresh(auth_header: BearerAuth) -> Result<HttpResponse, errors::Error>
 }
 
 // utils/update_password
-#[post("/update_password")]
-async fn update_password(payload: web::Json<models::api::Password>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn update_password(payload: web::Json<models::api::Password>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let passwords: models::api::Password = payload.into_inner();
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     validate_password(&passwords.password)
@@ -109,8 +105,7 @@ async fn update_password(payload: web::Json<models::api::Password>, db_pool: web
 /////////////////////////////////////////////////////////////////////////////////
 
 // Route: /utils/upgrade
-#[post("/upgrade")]
-async fn upgrade(payload: web::Json<models::api::Payment>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn upgrade(payload: web::Json<models::api::Payment>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let payment_info: models::api::Payment = payload.into_inner();
     let re_name = Regex::new(r"^[a-z-A-Z]{1,50}$").unwrap();                    // Only chars                                      |  Range: 1-50
     let re_address = Regex::new(r"^[a-z-A-Z-0-9-,-.-\s]{1,125}$").unwrap();     // Only Chars, numbers, white space, ',', and '.'  |  Range: 1-125
@@ -145,8 +140,7 @@ async fn upgrade(payload: web::Json<models::api::Payment>, db_pool: web::Data<Po
 }
 
 // Route: /utils/save
-#[post("/save")]
-async fn save(payload: web::Json<models::api::Save>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn save(payload: web::Json<models::api::Save>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let data: models::api::Save = payload.into_inner();
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "u" || claims.role == "a" {
@@ -166,8 +160,7 @@ async fn save(payload: web::Json<models::api::Save>, db_pool: web::Data<Pool>, a
 }
 
 // Route: /utils/load
-#[get("/load")]
-async fn load(db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn load(db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "u" || claims.role == "a" {
         let client = db_pool.get()
@@ -180,8 +173,7 @@ async fn load(db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpR
 }
 
 // Route: /admin/create
-#[post("/create_admin")]
-async fn create_admin(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn create_admin(payload: web::Json<models::api::Creds>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         let creds: models::api::Creds = payload.into_inner();
@@ -197,8 +189,7 @@ async fn create_admin(payload: web::Json<models::api::Creds>, db_pool: web::Data
 }
 
 // Route: /admin/users?page=Page Number
-#[get("/users")]
-async fn get_users(payload: web::Query<models::api::Page>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn get_users(payload: web::Query<models::api::Page>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         if payload.page > 0 {
@@ -215,8 +206,7 @@ async fn get_users(payload: web::Query<models::api::Page>, db_pool: web::Data<Po
 }
 
 // Route: /admin/user?identifier=Username/UUID
-#[get("/user")]
-async fn get_user(mut payload: web::Query<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn get_user(mut payload: web::Query<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         let identifier = get_identifier(&mut payload.identifier)
@@ -231,8 +221,7 @@ async fn get_user(mut payload: web::Query<models::api::User>, db_pool: web::Data
 }
 
 // Route: /admin/delete?identifier=Username/UUID
-#[delete("/delete")]
-async fn delete(mut payload: web::Query<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn delete(mut payload: web::Query<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         let identifier = get_identifier(&mut payload.identifier)
@@ -247,8 +236,7 @@ async fn delete(mut payload: web::Query<models::api::User>, db_pool: web::Data<P
 }
 
 // Route: /admin/unban
-#[post("/unban")]
-async fn unban(mut payload: web::Json<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn unban(mut payload: web::Json<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         let identifier = get_identifier(&mut payload.identifier)
@@ -263,8 +251,7 @@ async fn unban(mut payload: web::Json<models::api::User>, db_pool: web::Data<Poo
 }
 
 // Route: /admin/ban
-#[post("/ban")]
-async fn ban(mut payload: web::Json<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
+pub async fn ban(mut payload: web::Json<models::api::User>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let claims = token::decode_jwt(auth_header.token()).unwrap();
     if claims.role == "a" {
         let identifier = get_identifier(&mut payload.identifier)
