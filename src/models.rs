@@ -58,6 +58,9 @@ pub mod api {
             success: bool,
             access_token: String
         },
+        RegisterAdmin {
+            success: bool
+        },
         NewPassword {
             success: bool
         },
