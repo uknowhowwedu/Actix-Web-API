@@ -58,10 +58,10 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Type: POST
 >- Payload: Username and password as JSON
 >- Response: A JWT for accessing restricted routes
->- Requirements: The chosen username can't already be in use. Also the username and password must confrom to their respective formatting requirments.
+>- Requirements: The chosen username can't already be in use. Also, the username and password must conform to their respective formatting requirements.
 >
 >```sh
->curl -X POST http://domain.com/auth
+>curl -X POST http://domain.com/register
 >   -H 'Content-Type: application/json'
 >   -d '{
 >      "username": "test",
@@ -107,7 +107,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Requirements: User can not be an admin or already upgraded
 >
 >```sh
->curl -X POST http://domain.com/utils/update_password
+>curl -X POST http://domain.com/utils/upgrade
 >   -H 'Content-Type: application/json'
 >   -H 'Authorization: Bearer <JWT_GOES_HERE>'
 >   -d '{
@@ -169,7 +169,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >      }'
 >```
 ---
->### *Retriving Save Data*
+>### *Retrieving Save Data*
 >
 >- Type: GET
 >- Header: Bearer Authentication 
@@ -178,7 +178,6 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >
 >```sh
 >curl -X GET http://domain.com/utils/load
->   -H 'Content-Type: application/json'
 >   -H 'Authorization: Bearer <JWT_GOES_HERE>'
 >```
 ---
@@ -200,12 +199,12 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >    }'
 >```
 ---
->### *Retriving Users' Data*
+>### *Retrieving Users' Data*
 >
 >- Type: GET
 >- Header: Bearer Authentication
 >- Parameter: A page number
->- Response: JSON that containins the current page number, total pages available, number of users on the current page, and the data of each listed user (sensitive values omitted)
+>- Response: JSON that contains the current page number, total pages available, number of users on the current page, and the data of each listed user (sensitive values omitted)
 >- Requirements: The user must be an admin and the desired page number must exist (20 users per page)
 >
 >```sh
@@ -213,7 +212,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >   -H "Authorization: Bearer <JWT_GOES_HERE>"
 >```
 ---
->### *Retriving a User's Data*
+>### *Retrieving a User's Data*
 >
 >- Type: GET
 >- Header: Bearer Authentication
@@ -290,7 +289,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Payload: UUID/Username as JSON
 >- Response: Validity of the operation/request and the username of the unbanned user
 >- Requirements: The user must be an admin and the target user must exist and be banned
->- Result: Target user regains ability to use /auth to generate a JWT for accessing restricted routes
+>- Result: Target user regains the ability to use /auth to generate a JWT for accessing restricted routes
 >
 >```sh
 >curl -X POST http://domain.com/admin/unban
