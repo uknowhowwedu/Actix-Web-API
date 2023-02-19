@@ -217,7 +217,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Type: GET
 >- Header: Bearer Authentication
 >- Parameter: UUID/Username
->- Response: JSON that containins the data of the desired user (sensitive values omitted)
+>- Response: JSON that contains the data of the desired user (sensitive values omitted)
 >- Requirements: The user must be an admin and the target user must exist
 >
 >```sh
