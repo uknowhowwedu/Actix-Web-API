@@ -206,7 +206,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Header: Bearer Authentication
 >- Parameter: A page number
 >- Response: JSON that containins the current page number, total pages available, number of users on the current page, and the data of each listed user (sensitive values omitted)
->- Requirements: The user must be an admin and the desired page number must exist
+>- Requirements: The user must be an admin and the desired page number must exist (20 users per page)
 >
 >```sh
 >curl -X GET http://domain.com/admin/users?page=1
@@ -219,7 +219,7 @@ This will create and run two containers, one for PostgreSQL and the other for th
 >- Header: Bearer Authentication
 >- Parameter: UUID/Username
 >- Response: JSON that containins the data of the desired user (sensitive values omitted)
->- Requirements: The user must be an admin and the desired page number must exist
+>- Requirements: The user must be an admin and the target user must exist
 >
 >```sh
 >curl -X GET http://domain.com/admin/user?identifier=<USERNAME_GOES_HERE>
