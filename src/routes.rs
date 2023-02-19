@@ -1,5 +1,5 @@
 use actix_web_httpauth::extractors::bearer::BearerAuth;
-use actix_web::{web, get, post, delete, HttpResponse};
+use actix_web::{web, HttpResponse};
 use deadpool_postgres::Pool;
 use regex::Regex;
 use crate::models;
