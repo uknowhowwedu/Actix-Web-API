@@ -80,7 +80,7 @@ pub async fn refresh(auth_header: BearerAuth) -> Result<HttpResponse, errors::Er
     }
 }
 
-// utils/update_password
+// Route: /utils/update_password
 pub async fn update_password(payload: web::Json<models::api::Password>, db_pool: web::Data<Pool>, auth_header: BearerAuth) -> Result<HttpResponse, errors::Error> {
     let passwords: models::api::Password = payload.into_inner();
     let claims = token::decode_jwt(auth_header.token()).unwrap();
